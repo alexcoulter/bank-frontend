@@ -24,6 +24,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+    min-height: 100vh;
 }
 
 @layer utilities {
@@ -34,4 +35,14 @@ body {
 
 h1 {
   font-size: x-large;
+}
+
+hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 100%;               
+  background-color:darkgrey;
+  height: 1px;
+  margin: 5px 0;
 }

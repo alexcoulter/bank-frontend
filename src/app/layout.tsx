@@ -1,7 +1,9 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import  Navbar  from "@/app/components/Navbar"
+import Navbar from "@/app/components/Navbar";
 import "./globals.css";
+import { AppProvider } from "@/app/AppContext"; // Adjust the import path
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,8 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        {children}</body>
+        <AppProvider>
+          <Navbar />
+          {children}
+        </AppProvider>
+      </body>
     </html>
   );
 }
