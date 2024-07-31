@@ -45,7 +45,9 @@ export interface Schedule {
 
 export interface AppContextType {
   customer: Customer | undefined;
+  allAccounts: Account[];
   bankAccounts: Account[];
   creditAccounts: Account[];
   transactions: Transaction[];
+  setTransactions: any;
 }

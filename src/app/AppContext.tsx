@@ -1,7 +1,7 @@
 'use client'
 // AppContext.tsx
 import React, { useEffect, useState, createContext, useContext, ReactNode, FC } from "react";
-import { AppContextType, Player, Team, Schedule, Customer, Account, Transaction } from "./types";
+import { AppContextType, Customer, Account, Transaction } from "./types";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -14,7 +14,7 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const [customer, setCustomer] = useState<Customer>();
   const [creditAccounts, setCreditAccounts] = useState<Account[]>([]);
   const [bankAccounts, setBankAccounts] = useState<Account[]>([]);
-
+  const [allAccounts, setAllAccounts] = useState<Account[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
@@ -24,22 +24,20 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
       const customerResponse = await fetch('http://localhost:8080/api/customers/6');
       const customer = await customerResponse.json();
       console.log("***" + JSON.stringify(customer));
-      console.log("%%%" + JSON.stringify(customer.name));
+      const firstAccountId = customer.accounts[0].accountId;
+
       setCustomer(customer);
+      setAllAccounts(customer.accounts);
       const creditAccounts = customer.accounts.filter((account: Account)=> (account.accountType.toLowerCase() == "credit"));
-      console.log("$$$" + JSON.stringify(creditAccounts));
       setCreditAccounts(creditAccounts);
 
       const bankAccounts = customer.accounts.filter((account: Account)=> (account.accountType.toLowerCase() !== "credit"));
       setBankAccounts(bankAccounts);
-      // setLeague(customer.name);
-
-      // const accountsResponse = await fetch("http://localhost:8080/api/accounts/6");
-      // const accounts = await accountsResponse.json();
-      // setSchedule(accounts);
-
-      const transactionsResponse = await fetch('http://localhost:8080/api/transactions/11');
+ 
+      const transactionUrl = 'http://localhost:8080/api/transactions/' + firstAccountId;
+      const transactionsResponse = await fetch(transactionUrl);
       const transactions = await transactionsResponse.json();
+      console.log("AAAA" + JSON.stringify(transactions));
       setTransactions(transactions);
     }
 
@@ -49,9 +47,11 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <AppContext.Provider value={{
       customer,
-       bankAccounts,
-       creditAccounts,
-      transactions
+      allAccounts,
+      bankAccounts,
+      creditAccounts,
+      transactions,
+      setTransactions
     }}>
       {children}
     </AppContext.Provider>
